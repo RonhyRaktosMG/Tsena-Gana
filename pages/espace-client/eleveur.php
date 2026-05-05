@@ -2,6 +2,8 @@
 
 <?php
 
+session_start();
+
   # PDO
 require_once '../../core/pdo.php';
 
@@ -25,8 +27,12 @@ $total_en_vente = array_reduce($canards, function($carry, $item) {
     return $carry + max(0, $item['quantite_stock'] - $item['quantite_reserve']);
 }, 0);
 
+# Total de commande en attente
+$smtmt = $pdo->prepare('SELECT COUNT(*) FROM distribution_commande WHERE vendeur_id = :eleveur_id AND statut = "en_attente"');
+$smtmt->execute(['eleveur_id' => $_SESSION['user']['id']]);
+$total_commandes = $smtmt->fetchColumn();
 
-$total_commandes = 28; // Exemple statique pour les commandes ce mois
+# Total de revenus
 $total_revenus = 30000; // Exemple statique pour les revenus
 
 ?>
@@ -48,8 +54,8 @@ $total_revenus = 30000; // Exemple statique pour les revenus
       <div class="mb-4">
         <div class="font-bold text-sm text-gray-400 uppercase tracking-wide mb-2">Éleveur</div>
         <div class="flex items-center gap-2 mb-3">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-main">RA</div>
-          <div><div class="text-sm font-semibold">Éleveur Rakoto</div><div class="text-xs text-gray-400">Antananarivo</div></div>
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-main"><?php echo substr($_SESSION['user']['nom'], 0, 2); ?></div>
+          <div><div class="text-sm font-semibold">Éleveur <?php echo $_SESSION['user']['nom']; ?></div><div class="text-xs text-gray-400"><?php echo $_SESSION['user']['region']; ?></div></div>
         </div>
       </div>
       <a href="eleveur.php" class="sidebar-link" aria-current="page">📊 Tableau de bord</a>
@@ -62,7 +68,7 @@ $total_revenus = 30000; // Exemple statique pour les revenus
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div class="stat-card text-center"><div class="text-2xl font-bold text-green-main"><?php echo $total_canards; ?></div><div class="text-xs text-gray-500 mt-1">Canards en élevage</div></div>
         <div class="stat-card text-center"><div class="text-2xl font-bold text-green-main"><?php echo $total_en_vente; ?></div><div class="text-xs text-gray-500 mt-1">En vente</div></div>
-        <div class="stat-card text-center"><div class="text-2xl font-bold text-green-main"><?php echo $total_commandes; ?></div><div class="text-xs text-gray-500 mt-1">Commandes ce mois</div></div>
+        <div class="stat-card text-center"><div class="text-2xl font-bold text-green-main"><?php echo $total_commandes; ?></div><div class="text-xs text-gray-500 mt-1">Commandes en attentes</div></div>
         <div class="stat-card text-center"><div class="text-2xl font-bold text-green-main"><?php echo number_format($total_revenus, 0, ',', ' '); ?></div><div class="text-xs text-gray-500 mt-1">Revenus (Ar)</div></div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-1 gap-5">

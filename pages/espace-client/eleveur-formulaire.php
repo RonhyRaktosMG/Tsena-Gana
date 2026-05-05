@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once '../../core/pdo.php';
 
 $errors = [];
@@ -89,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="mb-4">
         <div class="font-bold text-sm text-gray-400 uppercase tracking-wide mb-2">Éleveur</div>
         <div class="flex items-center gap-2 mb-3">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-main">RA</div>
-          <div><div class="text-sm font-semibold">Éleveur Rakoto</div><div class="text-xs text-gray-400">Antananarivo</div></div>
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-main"><?php echo substr($_SESSION['user']['nom'], 0, 2); ?></div>
+          <div><div class="text-sm font-semibold">Éleveur <?php echo $_SESSION['user']['nom']; ?></div><div class="text-xs text-gray-400"><?php echo $_SESSION['user']['region']; ?></div></div>
         </div>
       </div>
       <a href="eleveur.php" class="sidebar-link">📊 Tableau de bord</a>

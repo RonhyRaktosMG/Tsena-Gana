@@ -15,6 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user && password_verify($password, $user['mot_de_passe'])) {
         $_SESSION['user'] = $user;
+        # Region de l'user
+        $nom_region = $pdo->query("SELECT nom FROM region WHERE id = {$user['region_id']}")->fetchColumn();
+        $_SESSION['user']['region'] = $nom_region;
+
         echo 'Connexion réussie !';
 
         Header('Location: ../../index.php');

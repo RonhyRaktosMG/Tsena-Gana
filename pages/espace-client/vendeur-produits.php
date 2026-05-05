@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 require_once '../../core/pdo.php';
 
 
@@ -26,7 +28,7 @@ $produits = $smtmt->fetchAll(PDO::FETCH_ASSOC);
         <div class="font-bold text-sm text-gray-400 uppercase tracking-wide mb-2">Vendeur</div>
         <div class="flex items-center gap-2 mb-3">
           <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-main">PR</div>
-          <div><div class="text-sm font-semibold">VendeurPro Ramy</div><div class="text-xs text-gray-400">Antananarivo</div></div>
+          <div><div class="text-sm font-semibold">Vendeur <?= $_SESSION['user']['nom'] ?></div><div class="text-xs text-gray-400"> <?= $_SESSION['user']['region'] ?> </div></div>
         </div>
       </div>
       <a href="vendeur.php" class="sidebar-link">📊 Tableau de bord</a>

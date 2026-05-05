@@ -1,8 +1,9 @@
 <?php
+session_start();
 
 require_once '../../core/pdo.php';
 
-$vendeur_id = 2;
+$vendeur_id = $_SESSION['user']['id'];
 
 $sql = "
 SELECT 
@@ -10,9 +11,13 @@ SELECT
     c.date_commande,
     u.nom AS nom_acheteur,
 
-    MIN(dc.statut) AS statut,
+    dc.statut,
+    dc.quantite_a_livrer,
 
-    SUM(dc.quantite_a_livrer * lc2.prix_unitaire) AS total
+    lc2.race,
+    lc2.prix_unitaire,
+
+    (dc.quantite_a_livrer * lc2.prix_unitaire) AS total_ligne
 
 FROM distribution_commande dc
 
@@ -25,7 +30,6 @@ WHERE
     dc.vendeur_id = :vendeur_id
     AND lc.type_article = 'canard'
 
-GROUP BY c.id
 ORDER BY c.date_commande DESC
 ";
 
@@ -33,37 +37,8 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute(['vendeur_id' => $vendeur_id]);
 
 $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-function getCanards($pdo, $commande_id, $vendeur_id) {
-
-    $sql = "
-    SELECT 
-        lc2.race,
-        lc2.prix_unitaire,
-        dc.quantite_a_livrer
-
-    FROM distribution_commande dc
-
-    JOIN ligne_commande lc ON lc.id = dc.ligne_commande_id
-    JOIN lot_canard lc2 ON lc.article_id = lc2.id
-
-    WHERE 
-        dc.vendeur_id = :vendeur_id
-        AND lc.type_article = 'canard'
-        AND lc.commande_id = :commande_id
-    ";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([
-        'vendeur_id' => $vendeur_id,
-        'commande_id' => $commande_id
-    ]);
-
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
 ?>
+
 
 
 <!DOCTYPE html>
@@ -81,8 +56,8 @@ function getCanards($pdo, $commande_id, $vendeur_id) {
       <div class="mb-4">
         <div class="font-bold text-sm text-gray-400 uppercase tracking-wide mb-2">Éleveur</div>
         <div class="flex items-center gap-2 mb-3">
-          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-main">RA</div>
-          <div><div class="text-sm font-semibold">Éleveur Rakoto</div><div class="text-xs text-gray-400">Antananarivo</div></div>
+          <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold bg-green-main"><?php echo substr($_SESSION['user']['nom'], 0, 2); ?></div>
+          <div><div class="text-sm font-semibold">Éleveur <?php echo $_SESSION['user']['nom']; ?></div><div class="text-xs text-gray-400"><?php echo $_SESSION['user']['region']; ?></div></div>
         </div>
       </div>
       <a href="eleveur.php" class="sidebar-link">📊 Tableau de bord</a>
@@ -94,7 +69,6 @@ function getCanards($pdo, $commande_id, $vendeur_id) {
       <h1 class="text-2xl font-bold mb-5 font-playfair">Commandes reçues</h1>
       <div class="space-y-3">
         <?php foreach ($commandes as $commande) { 
-          $canards = getCanards($pdo, $commande['numero_commande'], $vendeur_id);
           $action_label = "";
           $action_class = "";
           if ($commande['statut'] == 'en_attente') {
@@ -112,16 +86,14 @@ function getCanards($pdo, $commande_id, $vendeur_id) {
           <div>
             <div class="font-bold"><?= $commande['numero_commande'] ?></div>
             <div class="text-sm text-gray-500">
-              <?php foreach ($canards as $canard) { 
-                echo $canard['quantite_a_livrer'] . " × " . $canard['race'] . " · ";
-              } ?>  
+              <?= $commande['quantite_a_livrer'] ?> × <?= $commande['race'] ?> à <?= $commande['prix_unitaire'] ?> Ar 
             </div>
             <div class="text-sm text-green-300">Client: <?= $commande['nom_acheteur'] ?></div>
             <div class="text-xs text-gray-400"><?= $commande['date_commande'] ?></div>
           </div>
           <div class="flex items-center gap-2 flex-wrap">
             <span class="badge badge-orange"><?php echo $commande['statut']; ?></span>
-            <span class="font-bold text-green-main"><?= $commande['total'] ?> Ar</span>
+            <span class="font-bold text-green-main"><?= $commande['total_ligne'] ?> Ar</span>
             <span class="<?= $action_class ?> text-xs py-1.5 px-3 opacity-90"><?= $action_label ?></span>
           </div>
         </div>

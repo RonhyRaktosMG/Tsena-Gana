@@ -1,10 +1,11 @@
 
 <?php
+session_start();
 
 #PDO
 require_once '../../core/pdo.php';
 
-$user_id = 4;
+$user_id = $_SESSION['user']['id'];
 
 $sql = "
 SELECT 
