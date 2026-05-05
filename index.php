@@ -3,7 +3,7 @@
     session_start();
 
     if (!isset($_SESSION['user'])) {
-        header('Location: connexion.php');
+        header('Location: features/auth/connexion.php');
         exit();
     }
 
@@ -17,6 +17,6 @@
 </head>
 <body>
     <h1>Tongasoa eto amin'ny TsenaGana ry <?= $_SESSION['user']['nom'] ?></h1>
-    <a href="deconnexion.php">Se déconnecter</a>
+    <a href="features/auth/deconnexion.php">Se déconnecter</a>
 </body>
 </html>
