@@ -133,7 +133,6 @@ CREATE TABLE ligne_commande (
     article_id INT NOT NULL,
 
     quantite INT NOT NULL,
-    prix_unitaire DECIMAL(10,2) NOT NULL,
 
     FOREIGN KEY (commande_id) REFERENCES commande(id)
 );
