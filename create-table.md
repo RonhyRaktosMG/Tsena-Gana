@@ -167,7 +167,9 @@ CREATE TABLE distribution_commande (
 ```sql
 CREATE TABLE livraison (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    numero VARCHAR(100) NOT NULL,
     distribution_id INT NOT NULL,
+    livreur_id INT NOT NULL,
 
     adresse_depart VARCHAR(255),
     adresse_arrivee VARCHAR(255),
