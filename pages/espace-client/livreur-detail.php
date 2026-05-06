@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../../core/pdo.php';
+require_once '../../core/utils.php';
 
 $sql = "
 SELECT 
@@ -82,7 +83,7 @@ $livraison_detail = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
       </div>
       <a href="livreur.php" class="sidebar-link">🚚 Mes livraisons</a>
-      <div class="mt-auto pt-4"><a href="connexion.html" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
+      <div class="mt-auto pt-4"><a href="../../features/auth/deconnexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
     </aside>
     <main class="flex-1 p-6 overflow-auto">
       <a href="livreur.php" class="text-sm mb-4 inline-flex items-center gap-1 text-green-main no-underline">← Retour aux livraisons</a>

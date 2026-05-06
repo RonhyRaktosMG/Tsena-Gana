@@ -1,8 +1,8 @@
-
 <?php
 session_start();
 
 require_once '../../core/pdo.php';
+require_once '../../core/utils.php';
 
 
 $user_id = $_SESSION['user']['id'] ?? null;
@@ -64,7 +64,7 @@ $nombre_livraison_en_preparation = $livraisons ? count(array_filter($livraisons,
         </div>
       </div>
       <a href="livreur.php" class="sidebar-link" aria-current="page">🚚 Mes livraisons</a>
-      <div class="mt-auto pt-4"><a href="connexion.html" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
+      <div class="mt-auto pt-4"><a href="../../features/auth/deconnexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
     </aside>
     <main class="flex-1 p-6 overflow-auto">
       <div class="flex justify-between items-center mb-5 flex-wrap gap-3">

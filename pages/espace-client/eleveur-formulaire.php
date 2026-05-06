@@ -2,6 +2,7 @@
 session_start();
 
 require_once '../../core/pdo.php';
+require_once '../../core/utils.php';
 
 $errors = [];
 $id = isset($_GET['id']) ? (int)$_GET['id'] : null;
@@ -98,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <a href="eleveur.php" class="sidebar-link">📊 Tableau de bord</a>
       <a href="eleveur-canards.php" class="sidebar-link">🦆 Mes canards</a>
       <a href="eleveur-commandes.php" class="sidebar-link">🛍️ Commandes reçues</a>
-      <div class="mt-auto pt-4"><a href="connexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
+      <div class="mt-auto pt-4"><a href="../../features/auth/deconnexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
     </aside>
 
     <main class="flex-1 p-6 overflow-auto flex justify-center">

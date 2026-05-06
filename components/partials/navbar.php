@@ -1,14 +1,22 @@
+  <?php
+
+  require_once '../../core/utils.php';
+  
+
+  ?>
+  
+  
   <nav class="bg-white shadow-sm sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <a href="index.html" class="flex items-center gap-3 no-underline text-inherit">
-        <img src="../assets/images/logo.png" alt="TsenaGana" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
+        <img src="<?= url('assets/images/logo.png') ?>" alt="TsenaGana" width="36" height="36" class="h-9 w-9 shrink-0 object-contain" />
         <span class="font-bold text-xl font-playfair text-green-main">TsenaGana</span>
       </a>
       <div class="flex flex-wrap items-center gap-1">
         <a href="index.html" class="nav-link">Accueil</a>
         <!-- <a href="canards.html" class="nav-link" aria-current="page">Canards</a> -->
-        <a href="canards.html" class="nav-link">Canards</a>
-        <a href="aliments.html" class="nav-link">Aliments</a>
+        <a href="<?= url('pages/catalogue/canards.php') ?>" class="nav-link">Canards</a>
+        <a href="<?= url('pages/catalogue/produits.php') ?>" class="nav-link">Aliments</a>
         <a href="espace-client.html" class="nav-link">Mon espace</a>
       </div>
       <div class="flex items-center gap-2">

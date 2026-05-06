@@ -1,11 +1,10 @@
-
-
 <?php
 
 session_start();
 
   # PDO
 require_once '../../core/pdo.php';
+require_once '../../core/utils.php';
 
 
 $smtmt = $pdo->prepare('SELECT * FROM lot_canard');
@@ -61,7 +60,7 @@ $total_revenus = 30000; // Exemple statique pour les revenus
       <a href="eleveur.php" class="sidebar-link" aria-current="page">📊 Tableau de bord</a>
       <a href="eleveur-canards.php" class="sidebar-link">🦆 Mes canards</a>
       <a href="eleveur-commandes.php" class="sidebar-link">🛍️ Commandes reçues</a>
-      <div class="mt-auto pt-4"><a href="connexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
+      <div class="mt-auto pt-4"><a href="../../features/auth/deconnexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
     </aside>
     <main class="flex-1 p-6 overflow-auto">
       <h1 class="text-2xl font-bold mb-5 font-playfair">Tableau de bord</h1>

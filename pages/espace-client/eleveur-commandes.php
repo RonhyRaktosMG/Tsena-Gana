@@ -2,6 +2,7 @@
 session_start();
 
 require_once '../../core/pdo.php';
+require_once '../../core/utils.php';
 
 $vendeur_id = $_SESSION['user']['id'];
 
@@ -63,7 +64,7 @@ $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <a href="eleveur.php" class="sidebar-link">📊 Tableau de bord</a>
       <a href="eleveur-canards.php" class="sidebar-link">🦆 Mes canards</a>
       <a href="eleveur-commandes.php" class="sidebar-link" aria-current="page">🛍️ Commandes reçues</a>
-      <div class="mt-auto pt-4"><a href="connexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
+      <div class="mt-auto pt-4"><a href="../../features/auth/deconnexion.php" class="sidebar-link text-red-400">↩ Déconnexion</a></div>
     </aside>
     <main class="flex-1 p-6 overflow-auto">
       <h1 class="text-2xl font-bold mb-5 font-playfair">Commandes reçues</h1>
