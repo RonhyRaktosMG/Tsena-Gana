@@ -1,4 +1,10 @@
 <?php
+session_start();
+
+if (!isset($_SESSION['user'])) {
+  header('Location: ' . url('features/auth/connexion.php'));
+  exit; 
+}
 
 require_once '../../core/pdo.php';
 require_once '../../core/utils.php';
@@ -48,7 +54,7 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
       <?php
       foreach ($produits as $produit) {
       ?>
-        <a href="aliment-detail.html" class="card no-underline text-inherit block">
+        <div class="card no-underline text-inherit block">
           <div class="h-62 flex items-center justify-center bg-[#f9fbe7]">
             <img src="<?= $produit['image'] ?>" alt="<?= $produit['nom'] ?>" class="h-full w-full object-cover rounded">
           </div>
@@ -60,10 +66,10 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p class="text-sm text-gray-500 mb-2"><?= $produit['type'] ?></p>
             <div class="flex items-center justify-between">
               <span class="font-bold text-green-main"><?= $produit['prix_unitaire'] ?> Ar/<?= $produit['unite'] ?></span>
-              <span class="btn-primary text-sm pointer-events-none">+ Panier</span>
+              <button type="button" class="btn-primary text-sm btn-add-panier" data-type="produit" data-id="<?= $produit['id'] ?>" data-label="<?= htmlspecialchars($produit['nom'], ENT_QUOTES) ?>">+ Panier</button>
             </div>
           </div>
-        </a>
+        </div>
       
       <?php
       }
@@ -74,8 +80,37 @@ $produits = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </main>
 
-  <footer class="bg-[var(--black)] text-white py-8 px-4 mt-8">
-    <div class="max-w-6xl mx-auto text-center text-gray-500 text-sm">© 2026 TsenaGana</div>
-  </footer>
+  <?php include '../../components/partials/footer.php'; ?>
+  
+  <script>
+    const baseUrl = '<?= url("") ?>';
+    document.querySelectorAll('.btn-add-panier').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const articleId = this.dataset.id;
+        const articleLabel = this.dataset.label;
+        const typeArticle = this.dataset.type;
+
+        const formData = new FormData();
+        formData.append('type_article', typeArticle);
+        formData.append('article_id', articleId);
+        formData.append('quantite', 1);
+
+        fetch(baseUrl + 'pages/commande/ajouter_panier.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('✓ ' + articleLabel + ' ajouté au panier');
+          } else {
+            alert('✗ Erreur : ' + data.message);
+          }
+        })
+        .catch(error => console.error('Erreur:', error));
+      });
+    });
+  </script>
+  
 </body>
 </html>

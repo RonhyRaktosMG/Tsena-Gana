@@ -1,6 +1,6 @@
   <?php
 
-  require_once '../../core/utils.php';
+  require_once __DIR__ . '/../../core/utils.php';
   
 
   ?>
@@ -13,15 +13,15 @@
         <span class="font-bold text-xl font-playfair text-green-main">TsenaGana</span>
       </a>
       <div class="flex flex-wrap items-center gap-1">
-        <a href="index.html" class="nav-link">Accueil</a>
+        <a href="<?= url('/') ?>" class="nav-link">Accueil</a>
         <!-- <a href="canards.html" class="nav-link" aria-current="page">Canards</a> -->
         <a href="<?= url('pages/catalogue/canards.php') ?>" class="nav-link">Canards</a>
         <a href="<?= url('pages/catalogue/produits.php') ?>" class="nav-link">Aliments</a>
-        <a href="espace-client.html" class="nav-link">Mon espace</a>
+        <a href="<?= url('pages/espace-client/espace-client.php') ?>" class="nav-link">Mon espace</a>
       </div>
       <div class="flex items-center gap-2">
-        <a href="panier.html" class="btn-sec py-2 px-3 text-sm">🛒 <span class="ml-1 font-bold">12</span></a>
-        <a href="connexion.html" class="btn-primary text-sm">Connexion</a>
+        <a href="<?= url('pages/commande/panier.php') ?>" class="btn-sec py-2 px-3 text-sm">🛒 <span class="ml-1 font-bold"><?= isset($_SESSION['panier']) ? count($_SESSION['panier']) : 0 ?></span></a>
+        <a href="<?= url('features/auth/connexion.php') ?>" class="btn-primary text-sm">Connexion</a>
       </div>
     </div>
   </nav>

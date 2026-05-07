@@ -1,6 +1,14 @@
 <?php
 
+session_start();
+
 require_once '../../core/utils.php';
+
+if (!isset($_SESSION['user'])) {
+  header('Location: ' . url('features/auth/connexion.php'));
+  exit; 
+}
+
 
 
 require_once '../../core/pdo.php';
@@ -53,7 +61,7 @@ $canards = $stmt->fetchAll(PDO::FETCH_ASSOC);
       # Calcul de l'âge du lot de canards en mois
       $age_lot = floor((time() - strtotime($canard['date_naissance'])) / (30 * 24 * 60 * 60));
       ?>
-        <a href="canard-detail.html" class="card no-underline text-inherit block">
+        <div class="card text-inherit block">
           <div class="h-62 flex items-center justify-center bg-[#e0f5de]">
             <img src="<?= $canard['image'] ?>" alt="Canard <?= $canard['race']?>" class="h-full w-full object-cover rounded">
           </div>
@@ -66,10 +74,10 @@ $canards = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <p class="text-xs text-gray-400 mb-3">Âge : <?= $age_lot ?> mois · Poids moyen : <?= $canard['poids_moyen'] ?> kg</p>
             <div class="flex items-center justify-between">
               <span class="font-bold text-xl text-green-main"> <?= $canard['prix_unitaire'] ?> Ar</span>
-              <span class="btn-primary text-sm pointer-events-none">+ Panier</span>
+              <button type="button" class="btn-primary text-sm btn-add-panier" data-type="canard" data-id="<?= $canard['id'] ?>" data-label="Canard <?= htmlspecialchars($canard['race'], ENT_QUOTES) ?>">+ Panier</button>
             </div>
           </div>
-        </a>
+        </div>
       
       <?php
       }
@@ -80,8 +88,36 @@ $canards = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
   </main>
 
-  <footer class="bg-[var(--black)] text-white py-8 px-4 mt-8">
-    <div class="max-w-6xl mx-auto text-center text-gray-500 text-sm">© 2026 TsenaGana</div>
-  </footer>
+  <?php include '../../components/partials/footer.php'; ?>
+
+  <script>
+    const baseUrl = '<?= url("") ?>';
+    document.querySelectorAll('.btn-add-panier').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const articleId = this.dataset.id;
+        const articleLabel = this.dataset.label;
+        const typeArticle = this.dataset.type;
+        
+        const formData = new FormData();
+        formData.append('type_article', typeArticle);
+        formData.append('article_id', articleId);
+        formData.append('quantite', 1);
+        
+        fetch(baseUrl + 'pages/commande/ajouter_panier.php', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert('✓ ' + articleLabel + ' ajouté au panier');
+          } else {
+            alert('✗ Erreur : ' + data.message);
+          }
+        })
+        .catch(error => console.error('Erreur:', error));
+      });
+    });
+  </script>
 </body>
 </html>
